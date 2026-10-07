@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Convert between Celsius, Fahrenheit and Kelvin with real-time validation and thermodynamic boundary checks.">
+  <title>Precision Temperature Converter</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="hero">
+      <span class="pill">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 14.76V4a2 2 0 0 0-4 0v10.76a4 4 0 1 0 4 0z"/></svg>
+        Thermodynamic Temperature Converter
+      </span>
+      <h1>Precision Temperature Converter</h1>
+      <p class="subtitle">Convert seamlessly across Celsius, Fahrenheit, and Kelvin scales with real-time input validation, scientific precision, and thermodynamic boundary checks.</p>
+    </header>
+
+    <section class="card" aria-label="Temperature converter">
+      <div class="toolbar">
+        <div class="control">
+          <span class="control-label">Output View:</span>
+          <div class="segmented" id="viewToggle" role="group" aria-label="Output view">
+            <button type="button" class="seg active" data-view="all" aria-pressed="true">All Units Simultaneously</button>
+            <button type="button" class="seg" data-view="single" aria-pressed="false">Single Target Unit</button>
+          </div>
+        </div>
+        <div class="control">
+          <span class="control-label">Precision:</span>
+          <div class="segmented mono" id="precisionToggle" role="group" aria-label="Decimal precision">
+            <button type="button" class="seg" data-precision="1" aria-pressed="false">.1</button>
+            <button type="button" class="seg active" data-precision="2" aria-pressed="true">.2</button>
+            <button type="button" class="seg" data-precision="4" aria-pressed="false">.4</button>
+          </div>
+        </div>
+      </div>
+
+      <form id="converterForm" novalidate>
+        <div class="form-row">
+          <div class="field value-field">
+            <div class="field-head">
+              <label for="temperature">Enter temperature value</label>
+              <span class="hint">Press <kbd>Enter ↵</kbd> to convert</span>
+            </div>
+            <div class="input-wrap" id="inputWrap">
+              <input id="temperature" name="temperature" type="number" step="any" inputmode="decimal"
+                     value="20" autocomplete="off" aria-describedby="inputError">
+              <span class="unit-tag" id="unitTag">°F</span>
+            </div>
+            <p id="inputError" class="error-message" role="alert"></p>
+          </div>
+
+          <div class="field unit-field">
+            <div class="field-head">
+              <span class="field-title" id="sourceLabel">Source unit</span>
+              <label class="select-inline">Select:
+                <select id="inputUnit" aria-label="Source unit">
+                  <option value="C">Celsius (°C)</option>
+                  <option value="F" selected>Fahrenheit (°F)</option>
+                  <option value="K">Kelvin (K)</option>
+                </select>
+              </label>
+            </div>
+            <div class="unit-tiles" id="unitTiles" role="group" aria-labelledby="sourceLabel">
+              <button type="button" class="tile" data-unit="C" aria-pressed="false"><span class="sym">°C</span><span class="nm">Celsius</span></button>
+              <button type="button" class="tile active" data-unit="F" aria-pressed="true"><span class="sym">°F</span><span class="nm">Fahrenheit</span></button>
+              <button type="button" class="tile" data-unit="K" aria-pressed="false"><span class="sym">K</span><span class="nm">Kelvin</span></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-row">
+          <div class="info" id="infoLine">
+            <svg class="ico sparkle" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>
+            <span id="infoText">Converting input simultaneously to all remaining temperature scales.</span>
+            <label class="target-select" id="targetWrap" hidden>
+              Target:
+              <select id="targetUnit" aria-label="Target unit"></select>
+            </label>
+          </div>
+          <button class="convert-btn" type="submit">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M8 6h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 19h.01M12 19h.01M16 19h.01"/></svg>
+            Convert Temperature
+          </button>
+        </div>
+      </form>
+
+      <div class="presets">
+        <div class="presets-head">
+          <span class="field-title">Quick benchmark presets</span>
+          <span class="hint">Click to test instant values</span>
+        </div>
+        <div class="preset-list" id="presetList">
+          <button type="button" class="preset" data-value="-459.67">Absolute Zero <span class="pv">(-459.67°F)</span></button>
+          <button type="button" class="preset" data-value="-109.3">Dry Ice Sublimation <span class="pv">(-109.3°F)</span></button>
+          <button type="button" class="preset" data-value="32">Freezing Point of Water <span class="pv">(32°F)</span></button>
+          <button type="button" class="preset" data-value="69.8">Standard Room Temperature <span class="pv">(69.8°F)</span></button>
+          <button type="button" class="preset" data-value="98.6">Human Body Temperature <span class="pv">(98.6°F)</span></button>
+          <button type="button" class="preset" data-value="212">Boiling Point of Water <span class="pv">(212°F)</span></button>
+        </div>
+      </div>
+
+      <section class="results" aria-live="polite" aria-labelledby="resultsTitle">
+        <div class="results-head">
+          <h2 id="resultsTitle">Results</h2>
+          <span id="statusBadge" class="status-badge">Ready</span>
+        </div>
+        <div class="result-grid" id="resultGrid"></div>
+        <p id="resultMessage" class="result-message">Enter a temperature and press Convert.</p>
+      </section>
+    </section>
+
+    <p class="footnote">Absolute zero is −273.15°C / −459.67°F / 0 K.</p>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
